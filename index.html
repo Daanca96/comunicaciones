@@ -51,7 +51,6 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-  <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
 </head>
 <body>
   <div id="preloader">
@@ -88,20 +87,24 @@
     <a-text id="tip-1-text" 
             position="-4 7 8" 
             rotation="0 140 0"
-            scale="1.75 1.75 1.75" value="Las Botellas pasan por una maquina que les quita tapas y etiquetas."
+            scale="0.75 0.75 0.75" value="Las Botellas pasan por una maquina que les quita tapas y etiquetas."
             font="https://cdn.aframe.io/fonts/Roboto-msdf.json" align="left" opacity="0" color="#000000" wrap-count="26.38"
             letter-spacing="0" line-height="80.00" width="2.52" height="0" side="double" anchor="center"
             visible="true" 
-            animation="startEvents: trigger-clicked; property: text.opacity; to: 1; dur: 1000; easing: linear; elasticity: 400; delay: 0; dir: normal; loop: 0; "
-            animation__1="startEvents: trigger-clicked; property: scale; to: 1 1 1; dur: 1000; easing: easeOutElastic; elasticity: 400; delay: 0; dir: normal; loop: 0; "></a-text>
+            animation__show_opacity="startEvents: show-tip; property: text.opacity; to: 1; dur: 500; easing: linear;"
+            animation__show_scale="startEvents: show-tip; property: scale; to: 1.75 1.75 1.75; dur: 500; easing: easeOutElastic;"
+            animation__hide_opacity="startEvents: hide-tip; property: text.opacity; to: 0; dur: 400; easing: linear;"
+            animation__hide_scale="startEvents: hide-tip; property: scale; to: 0.75 0.75 0.75; dur: 400; easing: linear;"></a-text>
 
     <a-plane id="tip-1-background" 
              position="-4 7 8" 
              rotation="0 140 0"
              scale="0.75 0.75 0.75" width="3.00" height="1.5" color="yellow" opacity="0" shader="flat"
              side="double" metalness="0.5" roughness="1" repeat="1 1" visible="true" 
-             animation="startEvents: trigger-clicked; property: material.opacity; to: 1; dur: 1000; easing: linear; elasticity: 400; delay: 0; dir: normal; loop: 0; "
-             animation__1="startEvents: trigger-clicked; property: scale; to: 1 1 1; dur: 1000; easing: easeOutElastic; elasticity: 400; delay: 0; dir: normal; loop: 0; "></a-plane>
+             animation__show_opacity="startEvents: show-tip; property: material.opacity; to: 1; dur: 500; easing: linear;"
+             animation__show_scale="startEvents: show-tip; property: scale; to: 1 1 1; dur: 500; easing: easeOutElastic;"
+             animation__hide_opacity="startEvents: hide-tip; property: material.opacity; to: 0; dur: 400; easing: linear;"
+             animation__hide_scale="startEvents: hide-tip; property: scale; to: 0.75 0.75 0.75; dur: 400; easing: linear;"></a-plane>
 
     <a-sphere id="tip-2" position="-5 6 4" rotation="0 60 0"
               scale="0.5 0.5 0.5" radius="1" color="#FFFFFF" opacity="0" shader="flat" side="double" repeat="1 1" visible="true" class="clickable" 
@@ -114,14 +117,18 @@
             font="https://cdn.aframe.io/fonts/Roboto-msdf.json" align="left" opacity="0" color="#000000" wrap-count="26.38"
             letter-spacing="0" line-height="80.00" width="2.52" height="0" side="double" anchor="center"
             visible="true" 
-            animation="startEvents: trigger-clicked; property: text.opacity; to: 1; dur: 1000; easing: linear; elasticity: 400; delay: 0; dir: normal; loop: 0; "
-            animation__1="startEvents: trigger-clicked; property: scale; to: 1 1 1; dur: 1000; easing: easeOutElastic; elasticity: 400; delay: 0; dir: normal; loop: 0; "></a-text>
+            animation__show_opacity="startEvents: show-tip; property: text.opacity; to: 1; dur: 500; easing: linear;"
+            animation__show_scale="startEvents: show-tip; property: scale; to: 1 1 1; dur: 500; easing: easeOutElastic;"
+            animation__hide_opacity="startEvents: hide-tip; property: text.opacity; to: 0; dur: 400; easing: linear;"
+            animation__hide_scale="startEvents: hide-tip; property: scale; to: 0.75 0.75 0.75; dur: 400; easing: linear;"></a-text>
 
     <a-plane id="tip-2-background" position="-5 5 4.5" rotation="0 60 0"
              scale="0.75 0.75 0.75" width="3.00" height="1.5" color="cyan" opacity="0" shader="flat"
              side="double" metalness="0.5" roughness="1" repeat="1 1" visible="true" 
-             animation="startEvents: trigger-clicked; property: material.opacity; to: 1; dur: 1000; easing: linear; elasticity: 400; delay: 0; dir: normal; loop: 0; "
-             animation__1="startEvents: trigger-clicked; property: scale; to: 1 1 1; dur: 1000; easing: easeOutElastic; elasticity: 400; delay: 0; dir: normal; loop: 0; "></a-plane>
+             animation__show_opacity="startEvents: show-tip; property: material.opacity; to: 1; dur: 500; easing: linear;"
+             animation__show_scale="startEvents: show-tip; property: scale; to: 1 1 1; dur: 500; easing: easeOutElastic;"
+             animation__hide_opacity="startEvents: hide-tip; property: material.opacity; to: 0; dur: 400; easing: linear;"
+             animation__hide_scale="startEvents: hide-tip; property: scale; to: 0.75 0.75 0.75; dur: 400; easing: linear;"></a-plane>
 
     <a-sphere id="tip-3" position="-5 6.5 -3" rotation="0 60 0"
               scale="1 1 1" radius="1" color="#FFFFFF" opacity="0" shader="flat" side="double" repeat="1 1" visible="true" class="clickable" 
@@ -134,14 +141,18 @@
             font="https://cdn.aframe.io/fonts/Roboto-msdf.json" align="left" opacity="0" color="#000000" wrap-count="26.38"
             letter-spacing="0" line-height="80.00" width="2.52" height="0" side="double" anchor="center"
             visible="true" 
-            animation="startEvents: trigger-clicked; property: text.opacity; to: 1; dur: 1000; easing: linear; elasticity: 400; delay: 0; dir: normal; loop: 0; "
-            animation__1="startEvents: trigger-clicked; property: scale; to: 1 1 1; dur: 1000; easing: easeOutElastic; elasticity: 400; delay: 0; dir: normal; loop: 0; "></a-text>
+            animation__show_opacity="startEvents: show-tip; property: text.opacity; to: 1; dur: 500; easing: linear;"
+            animation__show_scale="startEvents: show-tip; property: scale; to: 1 1 1; dur: 500; easing: easeOutElastic;"
+            animation__hide_opacity="startEvents: hide-tip; property: text.opacity; to: 0; dur: 400; easing: linear;"
+            animation__hide_scale="startEvents: hide-tip; property: scale; to: 0.75 0.75 0.75; dur: 400; easing: linear;"></a-text>
 
     <a-plane id="tip-3-background" position="-2 7 0" rotation="0 60 0"
              scale="0.75 0.75 0.75" width="3.00" height="1.5" color="pink" opacity="0" shader="flat"
              side="double" metalness="0.5" roughness="1" repeat="1 1" visible="true" 
-             animation="startEvents: trigger-clicked; property: material.opacity; to: 1; dur: 1000; easing: linear; elasticity: 400; delay: 0; dir: normal; loop: 0; "
-             animation__1="startEvents: trigger-clicked; property: scale; to: 1 1 1; dur: 1000; easing: easeOutElastic; elasticity: 400; delay: 0; dir: normal; loop: 0; "></a-plane>
+             animation__show_opacity="startEvents: show-tip; property: material.opacity; to: 1; dur: 500; easing: linear;"
+             animation__show_scale="startEvents: show-tip; property: scale; to: 1 1 1; dur: 500; easing: easeOutElastic;"
+             animation__hide_opacity="startEvents: hide-tip; property: material.opacity; to: 0; dur: 400; easing: linear;"
+             animation__hide_scale="startEvents: hide-tip; property: scale; to: 0.75 0.75 0.75; dur: 400; easing: linear;"></a-plane>
 
     <a-sphere id="tip-4" position="3.5 4 0" rotation="0 -30 0"   
               scale="0.5 0.5 0.5" radius="1" color="#FFFFFF" opacity="0" shader="flat" side="double" repeat="1 1" visible="true" class="clickable" 
@@ -154,14 +165,18 @@
             font="https://cdn.aframe.io/fonts/Roboto-msdf.json" align="left" opacity="0" color="#000000" wrap-count="26.38"
             letter-spacing="0" line-height="80.00" width="5.52" height="0" side="double" anchor="center"
             visible="true" 
-            animation="startEvents: trigger-clicked; property: text.opacity; to: 1; dur: 1000; easing: linear; elasticity: 400; delay: 0; dir: normal; loop: 0; "
-            animation__1="startEvents: trigger-clicked; property: scale; to: 1 1 1; dur: 1000; easing: easeOutElastic; elasticity: 400; delay: 0; dir: normal; loop: 0; "></a-text>
+            animation__show_opacity="startEvents: show-tip; property: text.opacity; to: 1; dur: 500; easing: linear;"
+            animation__show_scale="startEvents: show-tip; property: scale; to: 1 1 1; dur: 500; easing: easeOutElastic;"
+            animation__hide_opacity="startEvents: hide-tip; property: text.opacity; to: 0; dur: 400; easing: linear;"
+            animation__hide_scale="startEvents: hide-tip; property: scale; to: 0.75 0.75 0.75; dur: 400; easing: linear;"></a-text>
 
     <a-plane id="tip-4-background" position="7.5 4.5 0" rotation="0 -30 0"
              scale="0.75 0.75 0.75" width="6.50" height="2.12" color="orange" opacity="0" shader="flat"
              side="double" metalness="0.5" roughness="1" repeat="1 1" visible="true" 
-             animation="startEvents: trigger-clicked; property: material.opacity; to: 1; dur: 1000; easing: linear; elasticity: 400; delay: 0; dir: normal; loop: 0; "
-             animation__1="startEvents: trigger-clicked; property: scale; to: 1 1 1; dur: 1000; easing: easeOutElastic; elasticity: 400; delay: 0; dir: normal; loop: 0; "></a-plane>
+             animation__show_opacity="startEvents: show-tip; property: material.opacity; to: 1; dur: 500; easing: linear;"
+             animation__show_scale="startEvents: show-tip; property: scale; to: 1 1 1; dur: 500; easing: easeOutElastic;"
+             animation__hide_opacity="startEvents: hide-tip; property: material.opacity; to: 0; dur: 400; easing: linear;"
+             animation__hide_scale="startEvents: hide-tip; property: scale; to: 0.75 0.75 0.75; dur: 400; easing: linear;"></a-plane>
 
     <a-sphere id="tip-5" position="7 5 7" rotation="0 -120 0"
               scale="1 1 1" radius="1" color="#FFFFFF" opacity="0" shader="flat" side="double" repeat="1 1" visible="true" class="clickable" 
@@ -174,21 +189,25 @@
             font="https://cdn.aframe.io/fonts/Roboto-msdf.json" align="left" opacity="0" color="#000000" wrap-count="26.38"
             letter-spacing="0" line-height="80.00" width="2.52" height="0" side="double" anchor="center"
             visible="true" 
-            animation="startEvents: trigger-clicked; property: text.opacity; to: 1; dur: 1000; easing: linear; elasticity: 400; delay: 0; dir: normal; loop: 0; "
-            animation__1="startEvents: trigger-clicked; property: scale; to: 1 1 1; dur: 1000; easing: easeOutElastic; elasticity: 400; delay: 0; dir: normal; loop: 0; "></a-text>
+            animation__show_opacity="startEvents: show-tip; property: text.opacity; to: 1; dur: 500; easing: linear;"
+            animation__show_scale="startEvents: show-tip; property: scale; to: 1 1 1; dur: 500; easing: easeOutElastic;"
+            animation__hide_opacity="startEvents: hide-tip; property: text.opacity; to: 0; dur: 400; easing: linear;"
+            animation__hide_scale="startEvents: hide-tip; property: scale; to: 0.75 0.75 0.75; dur: 400; easing: linear;"></a-text>
 
     <a-plane id="tip-5-background" position="4 6.5 6" rotation="0 -120 0"
              scale="0.75 0.75 0.75" width="3.00" height="1.5" color="cyan" opacity="0" shader="flat"
              side="double" metalness="0.5" roughness="1" repeat="1 1" visible="true" 
-             animation="startEvents: trigger-clicked; property: material.opacity; to: 1; dur: 1000; easing: linear; elasticity: 400; delay: 0; dir: normal; loop: 0; "
-             animation__1="startEvents: trigger-clicked; property: scale; to: 1 1 1; dur: 1000; easing: easeOutElastic; elasticity: 400; delay: 0; dir: normal; loop: 0; "></a-plane>
+             animation__show_opacity="startEvents: show-tip; property: material.opacity; to: 1; dur: 500; easing: linear;"
+             animation__show_scale="startEvents: show-tip; property: scale; to: 1 1 1; dur: 500; easing: easeOutElastic;"
+             animation__hide_opacity="startEvents: hide-tip; property: material.opacity; to: 0; dur: 400; easing: linear;"
+             animation__hide_scale="startEvents: hide-tip; property: scale; to: 0.75 0.75 0.75; dur: 400; easing: linear;"></a-plane>
   </a-scene>
 
   <script>
     $(document).ready(function () {
       const scene = document.querySelector('a-scene');
 
-      // 1. Ocultar el preloader cuando la escena VR esté cargada
+      // 1. Quitar preloader al cargar la escena
       if (scene.hasLoaded) {
         hidePreloader();
       } else {
@@ -199,6 +218,15 @@
         $('#preloader').fadeOut(500);
       }
 
+      // Objeto para guardar si cada ventana está abierta (true) o cerrada (false)
+      const activeStates = {
+        'tip-1': false,
+        'tip-2': false,
+        'tip-3': false,
+        'tip-4': false,
+        'tip-5': false
+      };
+
       // 2. Controlar la interacción con los hotspots (esferas)
       $('a-sphere[id^="tip-"]').on('click', function () {
         const sphereId = $(this).attr('id'); // Obtiene "tip-1", "tip-2", etc.
@@ -206,12 +234,19 @@
         const textElement = document.getElementById(`${sphereId}-text`);
         const backgroundElement = document.getElementById(`${sphereId}-background`);
 
-        // Dispara 'trigger-clicked' para activar las animaciones de A-Frame
-        if (textElement) {
-          textElement.emit('trigger-clicked');
-        }
-        if (backgroundElement) {
-          backgroundElement.emit('trigger-clicked');
+        if (!textElement || !backgroundElement) return;
+
+        // Alternar estados: si está visible, lo oculta. Si está oculto, lo muestra.
+        if (activeStates[sphereId]) {
+          // Ocultar la ventana
+          textElement.emit('hide-tip');
+          backgroundElement.emit('hide-tip');
+          activeStates[sphereId] = false;
+        } else {
+          // Mostrar la ventana
+          textElement.emit('show-tip');
+          backgroundElement.emit('show-tip');
+          activeStates[sphereId] = true;
         }
       });
     });
