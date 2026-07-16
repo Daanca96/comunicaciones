@@ -51,6 +51,88 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+
+  <script>
+    AFRAME.registerComponent('toggle-info', {
+      schema: {
+        textTarget: {type: 'selector'},
+        bgTarget: {type: 'selector'}
+      },
+      init: function () {
+        var el = this.el;
+        var data = this.data;
+        var isOpen = false; // Estado local de cada esfera
+
+        el.addEventListener('click', function () {
+          isOpen = !isOpen;
+
+          if (isOpen) {
+            // --- MOSTRAR VENTANA ---
+            // Definir escala del texto (el tip-1 es más grande en tu diseño)
+            var targetTextScale = (el.id === 'tip-1') ? '1.75 1.75 1.75' : '1 1 1';
+
+            // Animación de escala para texto y fondo
+            data.textTarget.setAttribute('animation__scale', {
+              property: 'scale',
+              to: targetTextScale,
+              dur: 500,
+              easing: 'easeOutElastic'
+            });
+            data.bgTarget.setAttribute('animation__scale', {
+              property: 'scale',
+              to: '1 1 1',
+              dur: 500,
+              easing: 'easeOutElastic'
+            });
+
+            // Animación de opacidad
+            data.textTarget.setAttribute('animation__fade', {
+              property: 'text.opacity',
+              to: 1,
+              dur: 300,
+              easing: 'linear'
+            });
+            data.bgTarget.setAttribute('animation__fade', {
+              property: 'material.opacity',
+              to: 1,
+              dur: 300,
+              easing: 'linear'
+            });
+
+          } else {
+            // --- OCULTAR VENTANA ---
+            // Escala a 0 para que no estorben físicamente
+            data.textTarget.setAttribute('animation__scale', {
+              property: 'scale',
+              to: '0 0 0',
+              dur: 300,
+              easing: 'easeInQuad'
+            });
+            data.bgTarget.setAttribute('animation__scale', {
+              property: 'scale',
+              to: '0 0 0',
+              dur: 300,
+              easing: 'easeInQuad'
+            });
+
+            // Opacidad a 0
+            data.textTarget.setAttribute('animation__fade', {
+              property: 'text.opacity',
+              to: 0,
+              dur: 200,
+              easing: 'linear'
+            });
+            data.bgTarget.setAttribute('animation__fade', {
+              property: 'material.opacity',
+              to: 0,
+              dur: 200,
+              easing: 'linear'
+            });
+          }
+        });
+      }
+    });
+  </script>
 </head>
 <body>
   <div id="preloader">
@@ -80,6 +162,7 @@
               position="-4 6 8" 
               rotation="0 140 0"
               scale="0.5 0.5 0.5" radius="1" color="#FFFFFF" opacity="0" shader="flat" side="double" repeat="1 1" visible="true" class="clickable" 
+              toggle-info="textTarget: #tip-1-text; bgTarget: #tip-1-background"
               animation="property: scale; to: 0.35 0.35 0.35; dur: 2000; easing: linear; elasticity: 400; delay: 0; dir: normal; loop: true; ">
       <a-image src="view.png"></a-image>
     </a-sphere>
@@ -100,6 +183,7 @@
 
     <a-sphere id="tip-2" position="-5 6 4" rotation="0 60 0"
               scale="0.5 0.5 0.5" radius="1" color="#FFFFFF" opacity="0" shader="flat" side="double" repeat="1 1" visible="true" class="clickable" 
+              toggle-info="textTarget: #tip-2-text; bgTarget: #tip-2-background"
               animation="property: scale; to: 0.35 0.35 0.35; dur: 2000; easing: linear; elasticity: 400; delay: 0; dir: normal; loop: true; ">
       <a-image src="view.png"></a-image>
     </a-sphere>
@@ -116,6 +200,7 @@
 
     <a-sphere id="tip-3" position="-5 6.5 -3" rotation="0 60 0"
               scale="1 1 1" radius="1" color="#FFFFFF" opacity="0" shader="flat" side="double" repeat="1 1" visible="true" class="clickable" 
+              toggle-info="textTarget: #tip-3-text; bgTarget: #tip-3-background"
               animation="property: scale; to: 0.35 0.35 0.35; dur: 2000; easing: linear; elasticity: 400; delay: 0; dir: normal; loop: true; ">
       <a-image src="view.png"></a-image>
     </a-sphere>
@@ -132,6 +217,7 @@
 
     <a-sphere id="tip-4" position="3.5 4 0" rotation="0 -30 0"   
               scale="0.5 0.5 0.5" radius="1" color="#FFFFFF" opacity="0" shader="flat" side="double" repeat="1 1" visible="true" class="clickable" 
+              toggle-info="textTarget: #tip-4-text; bgTarget: #tip-4-background"
               animation="property: scale; to: 0.35 0.35 0.35; dur: 2000; easing: linear; elasticity: 400; delay: 0; dir: normal; loop: true; ">
       <a-image src="view.png"></a-image>
     </a-sphere>
@@ -148,6 +234,7 @@
 
     <a-sphere id="tip-5" position="7 5 7" rotation="0 -120 0"
               scale="1 1 1" radius="1" color="#FFFFFF" opacity="0" shader="flat" side="double" repeat="1 1" visible="true" class="clickable" 
+              toggle-info="textTarget: #tip-5-text; bgTarget: #tip-5-background"
               animation="property: scale; to: 0.35 0.35 0.35; dur: 2000; easing: linear; elasticity: 400; delay: 0; dir: normal; loop: true; ">
       <a-image src="view.png"></a-image>
     </a-sphere>
@@ -166,112 +253,13 @@
   <script>
     $(document).ready(function () {
       const scene = document.querySelector('a-scene');
-
-      // 1. Quitar preloader al cargar la escena
       if (scene.hasLoaded) {
-        hidePreloader();
-      } else {
-        scene.addEventListener('loaded', hidePreloader);
-      }
-
-      function hidePreloader() {
         $('#preloader').fadeOut(500);
+      } else {
+        scene.addEventListener('loaded', function() {
+          $('#preloader').fadeOut(500);
+        });
       }
-
-      // Registro de estados individuales para saber si un tip está abierto
-      const activeStates = {
-        'tip-1': false,
-        'tip-2': false,
-        'tip-3': false,
-        'tip-4': false,
-        'tip-5': false
-      };
-
-      // Función auxiliar para forzar una animación limpia en A-Frame sin solapamientos
-      function animateProp(element, animName, properties) {
-        element.removeAttribute(animName); // Elimina animación previa para resetear el estado
-        element.setAttribute(animName, properties);
-      }
-
-      // 2. Controlar la interacción con los hotspots (esferas)
-      $('a-sphere[id^="tip-"]').on('click', function () {
-        const sphereId = $(this).attr('id'); // Ej: "tip-1"
-        
-        const textElement = document.getElementById(`${sphereId}-text`);
-        const backgroundElement = document.getElementById(`${sphereId}-background`);
-
-        if (!textElement || !backgroundElement) return;
-
-        if (activeStates[sphereId]) {
-          // --- ACCIÓN: OCULTAR ---
-          
-          // Animación de desvanecimiento de Texto
-          animateProp(textElement, 'animation__fade', {
-            property: 'text.opacity',
-            to: 0,
-            dur: 300,
-            easing: 'linear'
-          });
-          animateProp(textElement, 'animation__scale', {
-            property: 'scale',
-            to: '0 0 0',
-            dur: 300,
-            easing: 'easeInQuad'
-          });
-
-          // Animación de desvanecimiento del Fondo
-          animateProp(backgroundElement, 'animation__fade', {
-            property: 'material.opacity',
-            to: 0,
-            dur: 300,
-            easing: 'linear'
-          });
-          animateProp(backgroundElement, 'animation__scale', {
-            property: 'scale',
-            to: '0 0 0',
-            dur: 300,
-            easing: 'easeInQuad'
-          });
-
-          activeStates[sphereId] = false;
-
-        } else {
-          // --- ACCIÓN: MOSTRAR ---
-          
-          // Definir escala objetivo del texto (tip-1 usa 1.75, los demás 0.75)
-          const targetTextScale = (sphereId === 'tip-1') ? '1.75 1.75 1.75' : '1 1 1';
-
-          // Animación de aparición de Texto
-          animateProp(textElement, 'animation__fade', {
-            property: 'text.opacity',
-            to: 1,
-            dur: 500,
-            easing: 'linear'
-          });
-          animateProp(textElement, 'animation__scale', {
-            property: 'scale',
-            to: targetTextScale,
-            dur: 500,
-            easing: 'easeOutElastic'
-          });
-
-          // Animación de aparición del Fondo
-          animateProp(backgroundElement, 'animation__fade', {
-            property: 'material.opacity',
-            to: 1,
-            dur: 500,
-            easing: 'linear'
-          });
-          animateProp(backgroundElement, 'animation__scale', {
-            property: 'scale',
-            to: '1 1 1',
-            dur: 500,
-            easing: 'easeOutElastic'
-          });
-
-          activeStates[sphereId] = true;
-        }
-      });
     });
   </script>
 </body>
