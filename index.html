@@ -68,7 +68,7 @@
 
           if (isOpen) {
             // --- MOSTRAR VENTANA ---
-            // Definir escala del texto (el tip-1 es más grande en tu diseño)
+            // Definir escala del texto (el tip-1 es más grande en tu diseño original)
             var targetTextScale = (el.id === 'tip-1') ? '1.75 1.75 1.75' : '1 1 1';
 
             // Animación de escala para texto y fondo
@@ -101,7 +101,7 @@
 
           } else {
             // --- OCULTAR VENTANA ---
-            // Escala a 0 para que no estorben físicamente
+            // Escala a 0 para que no estorben físicamente en el espacio 3D
             data.textTarget.setAttribute('animation__scale', {
               property: 'scale',
               to: '0 0 0',
@@ -170,7 +170,7 @@
     <a-text id="tip-1-text" 
             position="-4 7 8" 
             rotation="0 140 0"
-            scale="0 0 0" value="Las Botellas pasan por una maquina que les quita tapas y etiquetas."
+            scale="0 0 0" value="Aqui podras poner contenido educativo para ensenar algo."
             font="https://cdn.aframe.io/fonts/Roboto-msdf.json" align="left" opacity="0" color="#000000" wrap-count="26.38"
             letter-spacing="0" line-height="80.00" width="2.52" height="0" side="double" anchor="center"
             visible="true"></a-text>
@@ -189,7 +189,7 @@
     </a-sphere>
 
     <a-text id="tip-2-text" position="-5 5 4.5" rotation="0 60 0"
-            scale="0 0 0" value="Luego de pasar por Control de calidad, una maquina las pica en forma de escamas."
+            scale="0 0 0" value="Aqui podras poner contenido educativo para ensenar algo."
             font="https://cdn.aframe.io/fonts/Roboto-msdf.json" align="left" opacity="0" color="#000000" wrap-count="26.38"
             letter-spacing="0" line-height="80.00" width="2.52" height="0" side="double" anchor="center"
             visible="true"></a-text>
@@ -206,7 +206,7 @@
     </a-sphere>
 
     <a-text id="tip-3-text" position="-2 7 0" rotation="0 60 0"
-            scale="0 0 0" value="Las escamas pasan por una maquina de lavado y secado."
+            scale="0 0 0" value="Aqui podras poner contenido educativo para ensenar algo."
             font="https://cdn.aframe.io/fonts/Roboto-msdf.json" align="left" opacity="0" color="#000000" wrap-count="26.38"
             letter-spacing="0" line-height="80.00" width="2.52" height="0" side="double" anchor="center"
             visible="true"></a-text>
@@ -223,7 +223,7 @@
     </a-sphere>
 
     <a-text id="tip-4-text" position="7.5 4.5 0" rotation="0 -30 0"
-            scale="0 0 0" value="Las escamas entran a una maquina que derrite el plastico y les da forma de cordon caliente."
+            scale="0 0 0" value="Aqui podras poner contenido educativo para ensenar algo."
             font="https://cdn.aframe.io/fonts/Roboto-msdf.json" align="left" opacity="0" color="#000000" wrap-count="26.38"
             letter-spacing="0" line-height="80.00" width="5.52" height="0" side="double" anchor="center"
             visible="true"></a-text>
@@ -240,7 +240,7 @@
     </a-sphere>
 
     <a-text id="tip-5-text" position="4 6.5 6" rotation="0 -120 0"
-            scale="0 0 0" value="Tras pasar por agua fria, los cordones se solidifican, Una maquina los corta para crear 'pellets'"
+            scale="0 0 0" value="Aqui podras poner contenido educativo para ensenar algo."
             font="https://cdn.aframe.io/fonts/Roboto-msdf.json" align="left" opacity="0" color="#000000" wrap-count="26.38"
             letter-spacing="0" line-height="80.00" width="2.52" height="0" side="double" anchor="center"
             visible="true"></a-text>
