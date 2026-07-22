@@ -5,12 +5,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Menú 3D Animado - The Waterfront</title>
+  <title>Módulo de Instrucción Virtual - The Waterfront</title>
 
+  <!-- Favicon existente -->
   <link rel="shortcut icon" type="image/png" href="assets/images/favicon.png">
-  <!-- Importamos la tipografía militar/naval 'Quantico' -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Quantico:700">
+
+  <!-- Fuentes: Roboto (para textos) y una fuente seria/militar para el título -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:600"> <!-- Fuente seria y geométrica -->
   
   <style>
     body {
@@ -19,81 +21,54 @@
       overflow: hidden;
       font-family: 'Roboto', sans-serif;
     }
-
-    /* Preloader */
-    #preloader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #111;
-      z-index: 99999;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: opacity 0.5s ease;
-    }
-
-    .preloader__spinner {
-      width: 50px;
-      height: 50px;
-      border: 5px solid #333;
-      border-top: 5px solid #348aa7;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+    /* SE HA ELIMINADO TODO EL CSS DEL PRELOADER */
   </style>
   
+  <!-- Scripts Principales -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
 
   <script>
-    // Componente para interactividad y comportamiento de botones
+    // --- COMPONENTE PARA GESTIONAR ENLACES ---
+    // Mantiene la lógica de hover (entrar/salir) y añade la redirección.
     AFRAME.registerComponent('link-handler', {
       schema: {
-        url: {default: ''}
+        url: {type: 'string', default: ''}
       },
       init: function () {
-        var data = this.data;
         var el = this.el;
+        var data = this.data;
 
-        // Evento Click para redireccionar
+        // Evento 'click': Se dispara por clic físico O por la FUSIÓN del cursor.
         el.addEventListener('click', function () {
           if (data.url) {
-            window.open(data.url, '_blank'); 
+            console.log("Redirigiendo a:", data.url);
+            // Usamos location.href para asegurar redirección en la misma pestaña
+            // si la fusión es bloqueada como pop-up.
+            window.location.href = data.url; 
+            
+            // Si prefieres nueva pestaña (puede ser bloqueado por el navegador):
+            // window.open(data.url, '_blank');
           }
         });
-        
-        // Efecto visual interactivo al enfocar el botón con el mouse
+
+        // --- EFECTOS VISUALES 'VIVOS' (HOVER) ---
+        // Al entrar el cursor
         el.addEventListener('mouseenter', function () {
-          // Pausar animación de pulso y agrandar
-          el.removeAttribute('animation__pulse');
+          // Pausar animación de pulso base si existe y agrandar
           el.setAttribute('animation__hoverin', {
             property: 'scale',
             to: '1.2 1.2 1.2',
-            dur: 300,
-            easing: 'easeOutBack'
+            dur: 200,
+            easing: 'easeOutCubic'
           });
         });
-        
+
+        // Al salir el cursor
         el.addEventListener('mouseleave', function () {
-          // Volver a escala base y reactivar la animación de "respiración"
+          // Volver a escala normal
           el.removeAttribute('animation__hoverin');
           el.setAttribute('scale', '1 1 1');
-          el.setAttribute('animation__pulse', {
-            property: 'scale',
-            to: '0.85 0.85 0.85',
-            dir: 'alternate',
-            dur: 2000,
-            loop: true,
-            easing: 'easeInOutSine'
-          });
         });
       }
     });
@@ -101,110 +76,96 @@
 </head>
 <body>
   
-  <div id="preloader">
-    <div class="preloader__spinner"></div>
-  </div>
+  <!-- SE HA ELIMINADO EL DIV DEL PRELOADER -->
 
   <a-scene>
+    <!-- Gestión de Assets -->
     <a-assets>
       <img id="sky-img" src="bbb.png">
-      <img id="img-btn-1" src="boton1.png">
-      <img id="img-btn-2" src="boton2.png">
-      <img id="img-btn-3" src="boton3.png">
-      <img id="img-btn-4" src="boton4.png">
+      <img id="view-icon" src="view.png">
     </a-assets>
 
     <!-- Fondo 360 -->
     <a-sky src="#sky-img" rotation="0 -130 0"></a-sky>
 
-    <!-- CÁMARA Y CURSOR VISIBLE (Recuperado del diseño original) -->
-    <a-entity id="main-camera-wrapper" position="0.43 4.06 4.92" rotation="0 -2.29 0">
-      <a-camera id="main-camera" visible="true" wasd-controls="enabled: false;" cursor="rayOrigin: mouse;" raycaster="objects: .clickable">
+    <!-- ========================================================== -->
+    <!-- CÁMARA Y CURSOR DE FUSIÓN (COPIADO DEL EJEMPLO INICIAL) -->
+    <!-- Esta es la entidad que gestiona la selección por tiempo. -->
+    <!-- ========================================================== -->
+    <a-entity id="main-camera-wrapper" position="0 1.6 0" rotation="0 0 0">
+      <a-camera id="main-camera" wasd-controls="enabled: false;" cursor="rayOrigin: mouse;" raycaster="objects: .clickable">
         
-        <!-- Puntero en forma de Círculo Azul -->
-        <a-cursor id="fuse-cursor" objects=".clickable" fuse="true" position="0 0 -1" rotation="0 0 0"
-                  scale="1 1 1" geometry="radiusInner: 0.02; radiusOuter: 0.03; thetaLength: 360; thetaStart: 90;"
-                  color="blue" opacity="1" shader="flat" repeat="1 1" visible="true"></a-cursor>
+        <!-- Cursor central fijo (Círculo Azul) -->
+        <a-cursor id="fuse-cursor" objects=".clickable" fuse="true" timeout="1500"
+                  position="0 0 -1" geometry="radiusInner: 0.02; radiusOuter: 0.03;"
+                  color="blue" shader="flat" visible="true"></a-cursor>
 
-        <!-- Anillo de progreso al hacer click/fusión -->
-        <a-ring id="fuse-progress" position="0 0 -0.999" rotation="0 0 0" scale="1 1 1"
-                radius-inner="0.02" radius-outer="0.03" theta-length="360" theta-start="90" color="#348aa7"
-                opacity="0" shader="flat" repeat="1 1" visible="true" class="clickable" 
-                animation="startEvents: fusing; property: geometry.thetaLength; to: 0; dur: 1500; easing: linear; dir: normal; loop: 0; from: 360;"
-                animation__1="startEvents: fusing; property: opacity; to: 1; dur: 500; easing: linear; dir: normal; loop: 0; from: 0;"></a-ring>
+        <!-- Anillo de progreso de Fusión (Cian) -->
+        <!-- La animación reduce thetaLength de 360 a 0 en 1.5s al detectar hover -->
+        <a-ring id="fuse-progress" position="0 0 -0.999" radius-inner="0.02" radius-outer="0.03"
+                theta-length="360" theta-start="90" color="#348aa7" opacity="0" shader="flat"
+                animation="startEvents: fusing; property: geometry.thetaLength; from: 360; to: 0; dur: 1500; easing: linear;"
+                animation__1="startEvents: fusing; property: opacity; from: 0; to: 1; dur: 200; easing: linear;"
+                animation__2="startEvents: mouseleave; property: opacity; to: 0; dur: 200; easing: linear;"
+                animation__3="startEvents: mouseleave; property: geometry.thetaLength; to: 360; dur: 0;">
+        </a-ring>
       </a-camera>
     </a-entity>
 
     <!-- ========================================================== -->
-    <!-- CONTENEDOR DEL MENÚ (Ubicado más arriba y alineado a la vista) -->
+    <!-- CONTENEDOR DEL MENÚ (Ubicación: Arriba y Separados) -->
     <!-- ========================================================== -->
-    <a-entity id="menu-container" position="0.43 5.2 1.5">
-
-      <!-- Título Principal con tipografía naval/militar Quantico -->
-      <a-text value="MODULO DE INSTRUCCION VIRTUAL" 
-              align="center" 
-              position="0 1.2 0" 
-              width="6" 
-              font="Quantico"
-              color="white"></a-text>
+    <a-entity id="menu-container" position="0 2.5 -4">
       
-      <!-- BOTÓN 1 (Extrema Izquierda) - Ahora con Subtítulo y Enlace -->
-      <a-entity id="btn-1" position="-2.7 0 0" class="clickable" 
-                link-handler="url: https://daanca96.github.io/comunicaciones/"
-                animation__pulse="property: scale; to: 0.85 0.85 0.85; dir: alternate; dur: 2000; loop: true; easing: easeInOutSine;">
-        <a-torus color="#FFFFFF" arc="360" radius="0.5" radius-tubular="0.02" segments-tubular="64" shader="standard" metalness="0.5" roughness="0.2"></a-torus>
-        <a-circle src="#img-btn-1" radius="0.48" shader="flat">
-          <a-animation attribute="rotation" to="0 360 0" dur="10000" repeat="indefinite" easing="linear"></a-animation>
-        </a-circle>
-        <!-- Subtítulo para el primer botón -->
-        <a-text value="PUENTE" align="center" position="0 -0.8 0" width="3" font="roboto"></a-text>
+      <!-- === TÍTULO PRINCIPAL === -->
+      <!-- Usando la fuente Oswald para aspecto serio/naval -->
+      <a-text value="MODULO DE INSTRUCCION VIRTUAL" 
+              align="center" color="#FFF" position="0 1.2 0" width="8" font="https://fonts.gstatic.com/s/oswald/v49/TK3iWqvM0Gfc490_Mw.woff2"></a-text>
+
+      <!-- === BOTONES HORIZONTALES (Espaciado aumentado: 1.8m) === -->
+
+      <!-- BOTÓN 1: PUENTE (Extrema Izquierda) -->
+      <!-- Configurado con la clase .clickable y el enlace correcto -->
+      <a-entity id="btn-1" position="-2.7 0 0">
+        <!-- Esfera interactiva (Verde) con icono -->
+        <a-sphere class="clickable" radius="0.5" color="#4CAF50" shader="flat"
+                  link-handler="url: https://daanca96.github.io/comunicaciones/">
+          <a-image src="#view-icon" scale="0.6 0.6 0.6" position="0 0 0.51"></a-image>
+        </sphere>
+        <!-- SUBTÍTULO: PUENTE -->
+        <a-text value="PUENTE" align="center" color="#FFF" position="0 -0.8 0" width="4" font="roboto"></a-text>
       </a-entity>
 
       <!-- BOTÓN 2 (Centro-Izquierda) -->
-      <a-entity id="btn-2" position="-0.9 0 0" class="clickable" 
-                link-handler="url: https://www.wikipedia.org"
-                animation__pulse="property: scale; to: 0.85 0.85 0.85; dir: alternate; dur: 2000; delay: 300; loop: true; easing: easeInOutSine;">
-        <a-torus color="#FFFFFF" arc="360" radius="0.5" radius-tubular="0.02" segments-tubular="64" shader="standard" metalness="0.5" roughness="0.2"></a-torus>
-        <a-circle src="#img-btn-2" radius="0.48" shader="flat">
-           <a-animation attribute="rotation" to="0 360 0" dur="10000" begin="1000" repeat="indefinite" easing="linear"></a-animation>
-        </a-circle>
+      <a-entity id="btn-2" position="-0.9 0 0">
+        <a-sphere class="clickable" radius="0.5" color="#2196F3" shader="flat"
+                  link-handler="url: https://www.wikipedia.org">
+          <a-image src="#view-icon" scale="0.6 0.6 0.6" position="0 0 0.51"></a-image>
+        </sphere>
+        <a-text value="INFO 2" align="center" color="#FFF" position="0 -0.8 0" width="4" font="roboto"></a-text>
       </a-entity>
 
       <!-- BOTÓN 3 (Centro-Derecha) -->
-      <a-entity id="btn-3" position="0.9 0 0" class="clickable" 
-                link-handler="url: https://aframe.io"
-                animation__pulse="property: scale; to: 0.85 0.85 0.85; dir: alternate; dur: 2000; delay: 600; loop: true; easing: easeInOutSine;">
-        <a-torus color="#FFFFFF" arc="360" radius="0.5" radius-tubular="0.02" segments-tubular="64" shader="standard" metalness="0.5" roughness="0.2"></a-torus>
-        <a-circle src="#img-btn-3" radius="0.48" shader="flat">
-           <a-animation attribute="rotation" to="0 360 0" dur="10000" begin="2000" repeat="indefinite" easing="linear"></a-animation>
-        </a-circle>
+      <a-entity id="btn-3" position="0.9 0 0">
+        <a-sphere class="clickable" radius="0.5" color="#FF9800" shader="flat"
+                  link-handler="url: https://aframe.io">
+          <a-image src="#view-icon" scale="0.6 0.6 0.6" position="0 0 0.51"></a-image>
+        </sphere>
+        <a-text value="INFO 3" align="center" color="#FFF" position="0 -0.8 0" width="4" font="roboto"></a-text>
       </a-entity>
 
       <!-- BOTÓN 4 (Extrema Derecha) -->
-      <a-entity id="btn-4" position="2.7 0 0" class="clickable" 
-                link-handler="url: https://github.com"
-                animation__pulse="property: scale; to: 0.85 0.85 0.85; dir: alternate; dur: 2000; delay: 900; loop: true; easing: easeInOutSine;">
-        <a-torus color="#FFFFFF" arc="360" radius="0.5" radius-tubular="0.02" segments-tubular="64" shader="standard" metalness="0.5" roughness="0.2"></a-torus>
-        <a-circle src="#img-btn-4" radius="0.48" shader="flat">
-           <a-animation attribute="rotation" to="0 360 0" dur="10000" begin="3000" repeat="indefinite" easing="linear"></a-animation>
-        </a-circle>
+      <a-entity id="btn-4" position="2.7 0 0">
+        <a-sphere class="clickable" radius="0.5" color="#E91E63" shader="flat"
+                  link-handler="url: https://github.com">
+          <a-image src="#view-icon" scale="0.6 0.6 0.6" position="0 0 0.51"></a-image>
+        </sphere>
+        <a-text value="INFO 4" align="center" color="#FFF" position="0 -0.8 0" width="4" font="roboto"></a-text>
       </a-entity>
 
     </a-entity>
 
   </a-scene>
 
-  <script>
-    $(document).ready(function () {
-      const scene = document.querySelector('a-scene');
-      const hidePreloader = () => { $('#preloader').fadeOut(500); };
-
-      if (scene.hasLoaded) {
-        hidePreloader();
-      } else {
-        scene.addEventListener('loaded', hidePreloader);
-      }
-    });
-  </script>
 </body>
 </html>
