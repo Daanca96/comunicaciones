@@ -5,12 +5,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Menú 3D Horizontal Alto y Espaciado - The Waterfront</title>
+  <title>Menú 3D Animado - The Waterfront</title>
 
-  <!-- Favicon (Opcional) -->
   <link rel="shortcut icon" type="image/png" href="assets/images/favicon.png">
-
-  <!-- Fuentes -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
   
   <style>
@@ -21,7 +18,7 @@
       font-family: 'Roboto', sans-serif;
     }
 
-    /* Estilos para el Preloader existente */
+    /* Preloader */
     #preloader {
       position: fixed;
       top: 0;
@@ -51,12 +48,11 @@
     }
   </style>
   
-  <!-- Scripts Principales -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
 
   <script>
-    // Componente para manejar el clic y la redirección
+    // Componente para interactividad y comportamiento de botones
     AFRAME.registerComponent('link-handler', {
       schema: {
         url: {default: ''}
@@ -65,29 +61,36 @@
         var data = this.data;
         var el = this.el;
 
+        // Evento Click para redireccionar
         el.addEventListener('click', function () {
           if (data.url) {
-            // Abrir en una pestaña nueva para no perder la experiencia VR
             window.open(data.url, '_blank'); 
           }
         });
         
-        // Efecto visual al pasar el cursor (hover)
+        // Efecto visual interactivo al enfocar el botón con el mouse
         el.addEventListener('mouseenter', function () {
+          // Pausar animación de pulso y agrandar
+          el.removeAttribute('animation__pulse');
           el.setAttribute('animation__hoverin', {
             property: 'scale',
-            to: '1.1 1.1 1.1',
-            dur: 200,
-            easing: 'easeOutCubic'
+            to: '1.2 1.2 1.2',
+            dur: 300,
+            easing: 'easeOutBack'
           });
         });
         
         el.addEventListener('mouseleave', function () {
-          el.setAttribute('animation__hoverout', {
+          // Volver a escala base y reactivar la animación de "respiración"
+          el.removeAttribute('animation__hoverin');
+          el.setAttribute('scale', '1 1 1');
+          el.setAttribute('animation__pulse', {
             property: 'scale',
-            to: '1 1 1',
-            dur: 200,
-            easing: 'easeOutCubic'
+            to: '0.85 0.85 0.85',
+            dir: 'alternate',
+            dur: 2000,
+            loop: true,
+            easing: 'easeInOutSine'
           });
         });
       }
@@ -96,16 +99,13 @@
 </head>
 <body>
   
-  <!-- Preloader HTML -->
   <div id="preloader">
     <div class="preloader__spinner"></div>
   </div>
 
   <a-scene>
-    <!-- Gestión de Assets -->
     <a-assets>
       <img id="sky-img" src="bbb.png">
-      <!-- Asegúrate de tener estas imágenes o cambiar los nombres -->
       <img id="img-btn-1" src="boton1.png">
       <img id="img-btn-2" src="boton2.png">
       <img id="img-btn-3" src="boton3.png">
@@ -115,58 +115,64 @@
     <!-- Fondo 360 -->
     <a-sky src="#sky-img" rotation="0 -130 0"></a-sky>
 
-    <!-- Cámara (Mantenemos la posición estándar) -->
-    <a-entity id="main-camera-wrapper" position="0 1.6 0" rotation="0 0 0">
-      <a-camera id="main-camera" wasd-controls="enabled: false;" cursor="rayOrigin: mouse;" raycaster="objects: .clickable">
+    <!-- CÁMARA Y CURSOR VISIBLE (Recuperado del diseño original) -->
+    <a-entity id="main-camera-wrapper" position="0.43 4.06 4.92" rotation="0 -2.29 0">
+      <a-camera id="main-camera" visible="true" wasd-controls="enabled: false;" cursor="rayOrigin: mouse;" raycaster="objects: .clickable">
+        
+        <!-- Puntero en forma de Círculo Azul -->
+        <a-cursor id="fuse-cursor" objects=".clickable" fuse="true" position="0 0 -1" rotation="0 0 0"
+                  scale="1 1 1" geometry="radiusInner: 0.02; radiusOuter: 0.03; thetaLength: 360; thetaStart: 90;"
+                  color="blue" opacity="1" shader="flat" repeat="1 1" visible="true"></a-cursor>
+
+        <!-- Anillo de progreso al hacer click/fusión -->
+        <a-ring id="fuse-progress" position="0 0 -0.999" rotation="0 0 0" scale="1 1 1"
+                radius-inner="0.02" radius-outer="0.03" theta-length="360" theta-start="90" color="#348aa7"
+                opacity="0" shader="flat" repeat="1 1" visible="true" class="clickable" 
+                animation="startEvents: fusing; property: geometry.thetaLength; to: 0; dur: 1500; easing: linear; dir: normal; loop: 0; from: 360;"
+                animation__1="startEvents: fusing; property: opacity; to: 1; dur: 500; easing: linear; dir: normal; loop: 0; from: 0;"></a-ring>
       </a-camera>
     </a-entity>
 
     <!-- ========================================================== -->
-    <!-- CONTENEDOR DEL MENÚ HORIZONTAL (Actualizado) -->
-    <!-- Posición Y subida de 1.5 a 2.2 para estar "en la mitad" alta -->
+    <!-- CONTENEDOR DEL MENÚ (Ubicado más arriba y alineado a la vista) -->
     <!-- ========================================================== -->
-    <a-entity id="menu-container" position="0 2.2 -3">
+    <a-entity id="menu-container" position="0.43 5.2 1.5">
       
-      <!-- Título del Menú -->
-      <a-text value="ELIGE TU DESTINO" align="center" color="#FFF" position="0 0.9 0" width="4" font="roboto"></a-text>
-
-      <!-- BOTONES CON EFECTO 3D Y ESPACIADO AUMENTADO -->
-      <!-- Usamos incrementos de X = 1.8m para separarlos más -->
-
-      <!-- BOTÓN 1 (Extrema Izquierda: X = -2.7) -->
+      <!-- BOTÓN 1 (Extrema Izquierda) -->
       <a-entity id="btn-1" position="-2.7 0 0" class="clickable" 
-                link-handler="url: https://www.google.com">
-        <!-- El borde redondo 3D (Torus) -->
-        <a-torus color="#348aa7" arc="360" radius="0.5" radius-tubular="0.02" segments-tubular="64" shader="standard" metalness="0.5" roughness="0.2"></a-torus>
-        <!-- La imagen circular dentro -->
+                link-handler="url: https://www.google.com"
+                animation__pulse="property: scale; to: 0.85 0.85 0.85; dir: alternate; dur: 2000; loop: true; easing: easeInOutSine;">
+        <a-torus color="#FFFFFF" arc="360" radius="0.5" radius-tubular="0.02" segments-tubular="64" shader="standard" metalness="0.5" roughness="0.2"></a-torus>
         <a-circle src="#img-btn-1" radius="0.48" shader="flat">
-          <!-- Animación de rotación continua -->
           <a-animation attribute="rotation" to="0 360 0" dur="10000" repeat="indefinite" easing="linear"></a-animation>
         </a-circle>
       </a-entity>
 
-      <!-- BOTÓN 2 (Centro-Izquierda: X = -0.9) -->
+      <!-- BOTÓN 2 (Centro-Izquierda) -->
       <a-entity id="btn-2" position="-0.9 0 0" class="clickable" 
-                link-handler="url: https://www.wikipedia.org">
-        <a-torus color="#348aa7" arc="360" radius="0.5" radius-tubular="0.02" segments-tubular="64" shader="standard" metalness="0.5" roughness="0.2"></a-torus>
+                link-handler="url: https://www.wikipedia.org"
+                animation__pulse="property: scale; to: 0.85 0.85 0.85; dir: alternate; dur: 2000; delay: 300; loop: true; easing: easeInOutSine;">
+        <a-torus color="#FFFFFF" arc="360" radius="0.5" radius-tubular="0.02" segments-tubular="64" shader="standard" metalness="0.5" roughness="0.2"></a-torus>
         <a-circle src="#img-btn-2" radius="0.48" shader="flat">
            <a-animation attribute="rotation" to="0 360 0" dur="10000" begin="1000" repeat="indefinite" easing="linear"></a-animation>
         </a-circle>
       </a-entity>
 
-      <!-- BOTÓN 3 (Centro-Derecha: X = 0.9) -->
+      <!-- BOTÓN 3 (Centro-Derecha) -->
       <a-entity id="btn-3" position="0.9 0 0" class="clickable" 
-                link-handler="url: https://aframe.io">
-        <a-torus color="#348aa7" arc="360" radius="0.5" radius-tubular="0.02" segments-tubular="64" shader="standard" metalness="0.5" roughness="0.2"></a-torus>
+                link-handler="url: https://aframe.io"
+                animation__pulse="property: scale; to: 0.85 0.85 0.85; dir: alternate; dur: 2000; delay: 600; loop: true; easing: easeInOutSine;">
+        <a-torus color="#FFFFFF" arc="360" radius="0.5" radius-tubular="0.02" segments-tubular="64" shader="standard" metalness="0.5" roughness="0.2"></a-torus>
         <a-circle src="#img-btn-3" radius="0.48" shader="flat">
            <a-animation attribute="rotation" to="0 360 0" dur="10000" begin="2000" repeat="indefinite" easing="linear"></a-animation>
         </a-circle>
       </a-entity>
 
-      <!-- BOTÓN 4 (Extrema Derecha: X = 2.7) -->
+      <!-- BOTÓN 4 (Extrema Derecha) -->
       <a-entity id="btn-4" position="2.7 0 0" class="clickable" 
-                link-handler="url: https://github.com">
-        <a-torus color="#348aa7" arc="360" radius="0.5" radius-tubular="0.02" segments-tubular="64" shader="standard" metalness="0.5" roughness="0.2"></a-torus>
+                link-handler="url: https://github.com"
+                animation__pulse="property: scale; to: 0.85 0.85 0.85; dir: alternate; dur: 2000; delay: 900; loop: true; easing: easeInOutSine;">
+        <a-torus color="#FFFFFF" arc="360" radius="0.5" radius-tubular="0.02" segments-tubular="64" shader="standard" metalness="0.5" roughness="0.2"></a-torus>
         <a-circle src="#img-btn-4" radius="0.48" shader="flat">
            <a-animation attribute="rotation" to="0 360 0" dur="10000" begin="3000" repeat="indefinite" easing="linear"></a-animation>
         </a-circle>
@@ -176,14 +182,10 @@
 
   </a-scene>
 
-  <!-- Script del Preloader -->
   <script>
     $(document).ready(function () {
       const scene = document.querySelector('a-scene');
-      
-      const hidePreloader = () => {
-        $('#preloader').fadeOut(500);
-      };
+      const hidePreloader = () => { $('#preloader').fadeOut(500); };
 
       if (scene.hasLoaded) {
         hidePreloader();
