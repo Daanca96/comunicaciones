@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Menú 3D Horizontal - The Waterfront</title>
+
+  <!-- Favicon (Opcional, cámbialo si tienes el archivo) -->
+  <link rel="shortcut icon" type="image/png" href="assets/images/favicon.png">
+
+  <!-- Fuentes -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+  
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    /* Estilos para el Preloader existente */
+    #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #111;
+      z-index: 99999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.5s ease;
+    }
+
+    .preloader__spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #333;
+      border-top: 5px solid #348aa7;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+  
+  <!-- Scripts Principales -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+
+  <script>
+    // Componente para manejar el clic y la redirección
+    AFRAME.registerComponent('link-handler', {
+      schema: {
+        url: {default: ''}
+      },
+      init: function () {
+        var data = this.data;
+        var el = this.el;
+
+        el.addEventListener('click', function () {
+          if (data.url) {
+            // Abrir en una pestaña nueva para no perder la experiencia VR
+            window.open(data.url, '_blank'); 
+          }
+        });
+        
+        // Efecto visual al pasar el cursor (hover)
+        el.addEventListener('mouseenter', function () {
+          el.setAttribute('animation__hoverin', {
+            property: 'scale',
+            to: '1.1 1.1 1.1',
+            dur: 200,
+            easing: 'easeOutCubic'
+          });
+        });
+        
+        el.addEventListener('mouseleave', function () {
+          el.setAttribute('animation__hoverout', {
+            property: 'scale',
+            to: '1 1 1',
+            dur: 200,
+            easing: 'easeOutCubic'
+          });
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+  
+  <!-- Preloader HTML -->
+  <div id="preloader">
+    <div class="preloader__spinner"></div>
+  </div>
+
+  <a-scene>
+    <!-- Gestión de Assets para optimizar carga -->
+    <a-assets>
+      <img id="sky-img" src="bbb.png">
+      <!-- Reemplaza estas imágenes con tus propios archivos -->
+      <img id="img-btn-1" src="boton1.png">
+      <img id="img-btn-2" src="boton2.png">
+      <img id="img-btn-3" src="boton3.png">
+      <img id="img-btn-4" src="boton4.png">
+    </a-assets>
+
+    <!-- Fondo 360 -->
+    <a-sky src="#sky-img" rotation="0 -130 0"></a-sky>
+
+    <!-- Cámara y Cursor (Mantenemos la configuración para escritorio y VR) -->
+    <a-entity id="main-camera-wrapper" position="0 1.6 0" rotation="0 0 0">
+      <a-camera id="main-camera" wasd-controls="enabled: false;" cursor="rayOrigin: mouse;" raycaster="objects: .clickable">
+        
+        <!-- Cursor de Fusión (para VR móvil, se esconde en escritorio) -->
+        <a-cursor id="fuse-cursor" objects=".clickable" fuse="true" timeout="1500"
+                  geometry="radiusInner: 0.02; radiusOuter: 0.03;"
+                  color="#348aa7" shader="flat" visible="false">
+          <a-animation begin="fusing" easing="linear" attribute="geometry.thetaLength"
+                       from="360" to="0" dur="1500"></a-animation>
+          <a-animation begin="mouseleave" easing="linear" attribute="geometry.thetaLength"
+                       from="0" to="360" dur="0"></a-animation>
+        </a-cursor>
+      </a-camera>
+    </a-entity>
+
+    <!-- ========================================================== -->
+    <!-- CONTENEDOR DEL MENÚ HORIZONTAL -->
+    <!-- Posicionado frente a la cámara (Z = -3) -->
+    <!-- ========================================================== -->
+    <a-entity id="menu-container" position="0 1.5 -3">
+      
+      <!-- Título del Menú (Opcional) -->
+      <a-text value="MENU PRINCIPAL" align="center" color="#FFF" position="0 0.8 0" width="4" font="roboto"></a-text>
+
+      <!-- BOTÓN 1 -->
+      <!-- 'position' maneja el orden horizontal (X negativo = izquierda) -->
+      <a-entity id="btn-1" position="-1.5 0 0" class="clickable" 
+                link-handler="url: https://www.google.com">
+        <!-- El borde redondo 3D -->
+        <a-torus color="#348aa7" arc="360" radius="0.5" radius-tubular="0.02" segments-tubular="64" shader="standard" metalness="0.5" roughness="0.2"></a-torus>
+        <!-- La imagen circular dentro -->
+        <a-circle src="#img-btn-1" radius="0.48" shader="flat">
+          <!-- Pequeña animación de rotación continua para efecto 3D -->
+          <a-animation attribute="rotation" to="0 360 0" dur="10000" repeat="indefinite" easing="linear"></a-animation>
+        </a-circle>
+      </a-entity>
+
+      <!-- BOTÓN 2 -->
+      <a-entity id="btn-2" position="-0.5 0 0" class="clickable" 
+                link-handler="url: https://www.wikipedia.org">
+        <a-torus color="#348aa7" arc="360" radius="0.5" radius-tubular="0.02" segments-tubular="64" shader="standard" metalness="0.5" roughness="0.2"></a-torus>
+        <a-circle src="#img-btn-2" radius="0.48" shader="flat">
+           <a-animation attribute="rotation" to="0 360 0" dur="10000" begin="1000" repeat="indefinite" easing="linear"></a-animation>
+        </a-circle>
+      </a-entity>
+
+      <!-- BOTÓN 3 -->
+      <a-entity id="btn-3" position="0.5 0 0" class="clickable" 
+                link-handler="url: https://aframe.io">
+        <a-torus color="#348aa7" arc="360" radius="0.5" radius-tubular="0.02" segments-tubular="64" shader="standard" metalness="0.5" roughness="0.2"></a-torus>
+        <a-circle src="#img-btn-3" radius="0.48" shader="flat">
+           <a-animation attribute="rotation" to="0 360 0" dur="10000" begin="2000" repeat="indefinite" easing="linear"></a-animation>
+        </a-circle>
+      </a-entity>
+
+      <!-- BOTÓN 4 -->
+      <a-entity id="btn-4" position="1.5 0 0" class="clickable" 
+                link-handler="url: https://github.com">
+        <a-torus color="#348aa7" arc="360" radius="0.5" radius-tubular="0.02" segments-tubular="64" shader="standard" metalness="0.5" roughness="0.2"></a-torus>
+        <a-circle src="#img-btn-4" radius="0.48" shader="flat">
+           <a-animation attribute="rotation" to="0 360 0" dur="10000" begin="3000" repeat="indefinite" easing="linear"></a-animation>
+        </a-circle>
+      </a-entity>
+
+    </a-entity>
+
+  </a-scene>
+
+  <!-- Script del Preloader existente modificado para A-Frame moderno -->
+  <script>
+    $(document).ready(function () {
+      const scene = document.querySelector('a-scene');
+      
+      const hidePreloader = () => {
+        $('#preloader').fadeOut(500);
+      };
+
+      if (scene.hasLoaded) {
+        hidePreloader();
+      } else {
+        scene.addEventListener('loaded', hidePreloader);
+      }
+    });
+  </script>
+</body>
+</html>
