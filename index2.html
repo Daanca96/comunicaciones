@@ -8,6 +8,8 @@
   <title>Menú 3D Animado - The Waterfront</title>
 
   <link rel="shortcut icon" type="image/png" href="assets/images/favicon.png">
+  <!-- Importamos la tipografía militar/naval 'Quantico' -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Quantico:700">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
   
   <style>
@@ -18,7 +20,7 @@
       font-family: 'Roboto', sans-serif;
     }
 
-    /* Preloader*/
+    /* Preloader */
     #preloader {
       position: fixed;
       top: 0;
@@ -41,7 +43,7 @@
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
- 
+
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
@@ -137,15 +139,25 @@
     <!-- CONTENEDOR DEL MENÚ (Ubicado más arriba y alineado a la vista) -->
     <!-- ========================================================== -->
     <a-entity id="menu-container" position="0.43 5.2 1.5">
+
+      <!-- Título Principal con tipografía naval/militar Quantico -->
+      <a-text value="MODULO DE INSTRUCCION VIRTUAL" 
+              align="center" 
+              position="0 1.2 0" 
+              width="6" 
+              font="Quantico"
+              color="white"></a-text>
       
-      <!-- BOTÓN 1 (Extrema Izquierda) -->
+      <!-- BOTÓN 1 (Extrema Izquierda) - Ahora con Subtítulo y Enlace -->
       <a-entity id="btn-1" position="-2.7 0 0" class="clickable" 
-                link-handler="url: https://www.google.com"
+                link-handler="url: https://daanca96.github.io/comunicaciones/"
                 animation__pulse="property: scale; to: 0.85 0.85 0.85; dir: alternate; dur: 2000; loop: true; easing: easeInOutSine;">
         <a-torus color="#FFFFFF" arc="360" radius="0.5" radius-tubular="0.02" segments-tubular="64" shader="standard" metalness="0.5" roughness="0.2"></a-torus>
         <a-circle src="#img-btn-1" radius="0.48" shader="flat">
           <a-animation attribute="rotation" to="0 360 0" dur="10000" repeat="indefinite" easing="linear"></a-animation>
         </a-circle>
+        <!-- Subtítulo para el primer botón -->
+        <a-text value="PUENTE" align="center" position="0 -0.8 0" width="3" font="roboto"></a-text>
       </a-entity>
 
       <!-- BOTÓN 2 (Centro-Izquierda) -->
